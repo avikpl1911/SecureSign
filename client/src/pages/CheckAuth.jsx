@@ -26,6 +26,7 @@ const CheckAuth = () => {
   const [address, setAddress] = React.useState("");
   const [docDetails, setDocDetails] = React.useState({});
   const [userDeatils, setUserDetails] = React.useState({});
+  const [docLoading, setDocLoading] = React.useState(false);
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -60,9 +61,11 @@ const CheckAuth = () => {
   }, []);
 
   const checkValidity = async () => {
+    setDocLoading(true);
     const validity = await identityContract.methods
       .isVerified(docCID)
       .call({ from: account });
+    setDocLoading(false);
     console.log(validity);
   };
 
@@ -80,7 +83,7 @@ const CheckAuth = () => {
             <Paper>
               <Box sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Verify Document
+                  Check Document
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={12}>
@@ -113,7 +116,7 @@ const CheckAuth = () => {
                   }}
                   onClick={checkValidity}
                 >
-                  Verify
+                  {docLoading ? "Loading..." : "Check Document"}
                 </Button>
               </Box>
             </Paper>

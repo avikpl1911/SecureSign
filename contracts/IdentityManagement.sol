@@ -10,6 +10,7 @@ contract IdentityManagement {
         bool hasGovCertificate;
         bool govCertificateVerified;
         string govCertificateCID;
+        string currentPicCID;
         Document[] AllDocuments;
         string physicalAddress;
     }
@@ -43,6 +44,7 @@ contract IdentityManagement {
         newIdentity.hasGovCertificate = true;
         newIdentity.govCertificateVerified = true;
         newIdentity.govCertificateCID = "";
+        newIdentity.currentPicCID = "";
         identityAddresses.push(msg.sender);
     }
 
@@ -51,7 +53,9 @@ contract IdentityManagement {
         string memory email,
         string memory phoneNumber,
         string memory physicalAddress,
-        string memory govCertificateCID
+        string memory govCertificateCID,
+        string memory currentPicCID,
+        bool verified
     ) public {
         require(
             identities[msg.sender].createdAt == 0,
@@ -63,10 +67,11 @@ contract IdentityManagement {
         newIdentity.phoneNumber = phoneNumber;
         newIdentity.physicalAddress = physicalAddress;
         newIdentity.createdAt = block.timestamp;
-        newIdentity.verified = false;
-        newIdentity.hasGovCertificate = false;
-        newIdentity.govCertificateVerified = false;
+        newIdentity.verified = verified;
+        newIdentity.hasGovCertificate = true;
+        newIdentity.govCertificateVerified = true;
         newIdentity.govCertificateCID = govCertificateCID;
+        newIdentity.currentPicCID = currentPicCID;
         identityAddresses.push(msg.sender);
 
         if (keccak256(abi.encodePacked(govCertificateCID)) != keccak256("")) {
@@ -233,11 +238,9 @@ contract IdentityManagement {
         return identity.AllDocuments.length;
     }
 
-    function getDocuments(address identityAddress)
-        public
-        view
-        returns (Document[] memory)
-    {
+    function getDocuments(
+        address identityAddress
+    ) public view returns (Document[] memory) {
         Identity storage identity = identities[identityAddress];
         require(identity.verified == true, "Identity not verified.");
         return identity.AllDocuments;
@@ -251,11 +254,9 @@ contract IdentityManagement {
         return allDocumentsforAdmin;
     }
 
-    function getIdentity(address identityAddress)
-        public
-        view
-        returns (Identity memory)
-    {
+    function getIdentity(
+        address identityAddress
+    ) public view returns (Identity memory) {
         return identities[identityAddress];
     }
 
@@ -281,15 +282,9 @@ contract IdentityManagement {
         return msg.sender == admin;
     }
 
-    function isVerified(string memory documentCID)
-        public
-        view
-        returns (
-            bool,
-            Document memory,
-            Identity memory
-        )
-    {
+    function isVerified(
+        string memory documentCID
+    ) public view returns (bool, Document memory, Identity memory) {
         Document memory document = documents[documentCID];
         Identity memory identity = identities[document.identityAddress];
         if (identity.verified == true && document.verified == true) {

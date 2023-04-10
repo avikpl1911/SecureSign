@@ -14,8 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 
-const pages = ["Verify Profiles", "Verify Documents", "Add Documents"];
-const hrefs = ["/admin", "/vdocument", "/add"];
+const pages = ["Verify Profiles", "Verify Documents"];
+const hrefs = ["/admin", "/vdocument"];
 const settings = ["Profile"];
 
 function NavAdmin(props) {
@@ -46,7 +46,7 @@ function NavAdmin(props) {
             variant="h6"
             noWrap
             component="a"
-            href="/user"
+            href="/admin"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
