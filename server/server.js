@@ -148,20 +148,17 @@ app.post("/post-face", async (req, res) => {
   let faces = await extractFeaces(File1);
   fs.writeFileSync(__dirname + "/img/face.jpg", faces);
 
+  let result = await uploadLabeledImages([File1], label);
+
   // let result = await uploadLabeledImages(
-  //   [File1, File2, File3, File4, File5, File6],
+  //   [
+  //     __dirname + "/img/face.jpg",
+  //     __dirname + "/img/face.jpg",
+  //     __dirname + "/img/face.jpg",
+  //     __dirname + "/img/face.jpg",
+  //   ],
   //   label
   // );
-
-  let result = await uploadLabeledImages(
-    [
-      __dirname + "/img/face.jpg",
-      __dirname + "/img/face.jpg",
-      __dirname + "/img/face.jpg",
-      __dirname + "/img/face.jpg",
-    ],
-    label
-  );
   fs.readdir(__dirname + "/tmp", (err, files) => {
     if (err) throw err;
 
@@ -184,9 +181,17 @@ app.post("/post-face", async (req, res) => {
 });
 
 app.post("/check-face", async (req, res) => {
+  console.log(req.files);
   const File1 = req.files.File1.tempFilePath;
+  console.log(File1);
   let result = await getDescriptorsFromDB(File1);
-  res.json({ result });
+  console.log(result);
+  //check if the is a empty array
+  if (result.length === 0) {
+    res.json({ message: "No face detected" });
+  } else {
+    res.json({ result });
+  }
 });
 
 app.listen(5000, () => {

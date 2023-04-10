@@ -168,22 +168,6 @@ export default function App() {
   }
   const handleClickOpen = async () => {
     setOpen(true);
-    // setIpfsUploading(true);
-    // //wait for 5 seconds
-    // setTimeout(() => {
-    //   setIpfsUploading(false);
-    //   setRequestPredicting(true);
-    // }, 5000);
-    // //wait for 10 seconds
-    // setTimeout(() => {
-    //   setRequestPredicting(false);
-    //   setModelPredicting(true);
-    // }, 10000);
-    // //wait for 15 seconds
-    // setTimeout(() => {
-    //   setModelPredicting(false);
-    //   setResult(true);
-    // }, 15000);
     try {
       let curr;
       let cid;
@@ -196,7 +180,6 @@ export default function App() {
         physicalAddress
       );
       setIpfsUploading(true);
-      // sendFileToIPFS(govid, dataURLtoFile(fileImgUrl, "image.png"));
       const formData = new FormData();
       formData.append("file", govid);
 
@@ -229,16 +212,12 @@ export default function App() {
       console.log("File sent to IPFS: ", resFile1.data.IpfsHash);
       curr = resFile1.data.IpfsHash;
       setIpfsUploading(false);
-      // wait untill cid and curr are set
-      console.log(cid, curr);
-      // setIpfsUploading(false);
       setRequestPredicting(true);
-      // //wait for 5 seconds
       setTimeout(() => {
         setRequestPredicting(false);
         setModelPredicting(true);
       }, 5000);
-      let verified = false;
+
       const formData2 = new FormData();
       formData2.append("File1", govid);
       formData2.append("label", email);
@@ -249,6 +228,7 @@ export default function App() {
           },
         })
         .then((res) => {
+          console.log(res);
           if (res.data.message !== "Face data stored successfully") {
             alert(res.data.message + " Please try again");
             window.location.reload();
@@ -256,48 +236,48 @@ export default function App() {
           }
         })
         .catch((err) => {
+          console.log(err);
           alert("Face not verified , Please try again");
           window.location.reload();
         });
 
-      const newFormData = new FormData();
-      newFormData.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
+      const formData3 = new FormData();
+      formData3.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
+      let verified = false;
       await axios
-        .post("http://localhost:5000/check-face", newFormData, {
+        .post("http://localhost:5000/check-face", formData3, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then(async (res) => {
-          if (res.data.result[0]._label === email) {
-            verified = true;
-          }
-          try {
-            if (verified) {
-              const res = await identityContract.methods
-                .createIdentity(
-                  name,
-                  email,
-                  phone,
-                  physicalAddress,
-                  cid,
-                  curr,
-                  verified
-                )
-                .send({ from: account });
-              console.log(res);
-              navigate("/user");
-              // setContinueToRegister(true);
+          if (res.data.message === "No face detected") {
+            console.log("No face detected");
+            verified = false;
+          } else {
+            console.log(res.data.result[0]._label);
+            console.log("Face detected");
+            if (res.data.result[0]._label === email) {
+              verified = true;
             } else {
-              alert("Face not verified , Please try again");
-              window.location.reload();
+              verified = false;
             }
-          } catch (error) {
-            console.log(error);
           }
-          console.log(res);
+          await identityContract.methods
+            .createIdentity(
+              name,
+              email,
+              phone,
+              physicalAddress,
+              cid,
+              curr,
+              verified
+            )
+            .send({ from: account });
+          navigate("/user");
         })
         .catch((err) => {
+          console.log(err);
           alert("Face not verified , Please try again");
           window.location.reload();
         });

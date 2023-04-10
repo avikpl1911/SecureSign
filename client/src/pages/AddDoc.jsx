@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 
 const theme = createTheme();
@@ -214,7 +215,11 @@ const AddDoc = () => {
                                 handleUpload();
                               }}
                             >
-                              Upload
+                              {docUploading ? (
+                                <CircularProgress color="secondary" size={20} />
+                              ) : (
+                                "Upload"
+                              )}
                             </Button>
                           </Box>
                         </form>

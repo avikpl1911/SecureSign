@@ -17,6 +17,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Slide from "@mui/material/Slide";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Iframe from "react-iframe";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const CheckAuth = () => {
   const [identityContract, setIdentityContract] = React.useState(null);
@@ -27,6 +40,28 @@ const CheckAuth = () => {
   const [docDetails, setDocDetails] = React.useState({});
   const [userDeatils, setUserDetails] = React.useState({});
   const [docLoading, setDocLoading] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [currentDoc, setCurrentDoc] = React.useState(null);
+  const [currentIdentity, setCurrentIdentity] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    dob: "",
+  });
+
+  const [datas, setData] = React.useState(
+    {
+      0: false,
+      1: {
+        documentCID: "",
+        identityAddress: "",
+        timestamp: "",
+        verified: false,
+      },
+    },
+    []
+  );
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -62,11 +97,41 @@ const CheckAuth = () => {
 
   const checkValidity = async () => {
     setDocLoading(true);
-    const validity = await identityContract.methods
+    const data = await identityContract.methods
       .isVerified(docCID)
       .call({ from: account });
+    setData(data);
     setDocLoading(false);
-    console.log(validity);
+    handleClickOpen(data[1].documentCID, data[1].identityAddress);
+    console.log(datas);
+  };
+
+  const handleClickOpen = async (doc, identityAddress) => {
+    //fetch identity
+    console.log(datas);
+    setCurrentIdentity({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      dob: "",
+    });
+    let identity = await identityContract.methods
+      .getIdentity(identityAddress)
+      .call();
+    setCurrentIdentity(identity);
+    console.log(identity);
+    setCurrentDoc(doc);
+    setOpen(true);
+  };
+
+  const handleClose = async () => {
+    setOpen(false);
+    // window.location.reload();
+  };
+
+  const close = () => {
+    setOpen(false);
   };
 
   return (
@@ -123,6 +188,128 @@ const CheckAuth = () => {
           </Grid>
           <Grid item xs={12} sm={6}></Grid>
         </Grid>
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={close}
+          TransitionComponent={Transition}
+        >
+          <AppBar sx={{ position: "relative" }}>
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={close}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Document Details
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleClose}>
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <Grid
+            container
+            spacing={3}
+            style={{
+              height: "100vh",
+              width: "100vw",
+              overflow: "auto",
+            }}
+          >
+            <Grid item xs={6}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography variant="h6" gutterBottom component="div">
+                  Document Details
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Document Name: {datas[1].documentName}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Document CID: {datas[1].documentCID}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Document Verified:{" "}
+                  {datas[1].verified ? "Verified" : "Not Verified"}
+                  {datas[1].verified ? (
+                    <CheckCircleIcon
+                      sx={{ color: "green", marginLeft: "10px" }}
+                    />
+                  ) : (
+                    <CancelIcon sx={{ color: "red", marginLeft: "10px" }} />
+                  )}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Document Validity:{" "}
+                  {new Date(datas[1].validityUpTo * 1000).toDateString()}
+                </Typography>
+              </Paper>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography variant="h6" gutterBottom component="div">
+                  Account Details
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Address: {datas[1].identityAddress}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Name: {currentIdentity["name"]}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  Email: {currentIdentity["email"]}
+                </Typography>
+
+                <Typography variant="h6" gutterBottom component="div">
+                  Account Verified:
+                  {currentIdentity["verified"] ? "Verified" : "Not Verified"}
+                  {currentIdentity["verified"] ? (
+                    <CheckCircleIcon
+                      sx={{ color: "green", marginLeft: "10px" }}
+                    />
+                  ) : (
+                    <CancelIcon sx={{ color: "red", marginLeft: "10px" }} />
+                  )}
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
+                <Iframe
+                  url={`https://gateway.pinata.cloud/ipfs/${currentDoc}`}
+                  width="100%"
+                  height="100%"
+                  id=""
+                  className=""
+                  display="block"
+                  position="relative"
+                />
+              </Paper>
+            </Grid>
+          </Grid>
+        </Dialog>
       </Container>
     </>
   );

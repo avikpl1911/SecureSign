@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 
-const pages = ["Add Document", "Status", "Verify"];
+const pages = ["Add Document", "Status", "Check Documents"];
 const hrefs = ["/add", "/status", "/verify"];
 const settings = ["Profile"];
 
