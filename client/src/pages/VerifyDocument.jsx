@@ -36,6 +36,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Iframe from "react-iframe";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -111,7 +112,7 @@ const VerifyDocument = () => {
         }
 
         let docList = await identityContract.methods.getAllDocument().call();
-
+        docList = docList.filter((doc) => doc["verified"] === false);
         setDocList(docList);
         console.log(docList);
       } catch (error) {
@@ -320,13 +321,15 @@ const VerifyDocument = () => {
                                   height: "100%",
                                 }}
                               >
-                                <iframe
-                                  src={`https://gateway.pinata.cloud/ipfs/${currentDoc}`}
-                                  title="Document"
-                                  name="iframe_a"
+                                <Iframe
+                                  url={`https://gateway.pinata.cloud/ipfs/${currentDoc}`}
                                   width="100%"
                                   height="100%"
-                                ></iframe>
+                                  id=""
+                                  className=""
+                                  display="block"
+                                  position="relative"
+                                />
                               </Paper>
                             </Grid>
                           </Grid>
