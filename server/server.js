@@ -9,6 +9,9 @@ faceapi.env.monkeyPatch({ Canvas, Image });
 const fs = require("fs");
 const path = require("path");
 const app = express();
+const file = fs.readFileSync(
+  path.join(__dirname, "./3E40B9DADA03055BDE32F4F41BC96183.txt")
+);
 const accountSid = "AC6af9ec51bdc5af20f40de5d87fe45d2b";
 const authToken = "d69fdbba7fea593e2a1c02fe3d480a1e";
 const client = require("twilio")(accountSid, authToken);
@@ -17,6 +20,13 @@ app.use(
   fileUpload({
     useTempFiles: true,
   })
+);
+
+app.get(
+  "/.well-known/pki-validation/3E40B9DADA03055BDE32F4F41BC96183.txt",
+  (req, res) => {
+    res.status(200).send(file);
+  }
 );
 app.use(cors());
 app.use(express.json());

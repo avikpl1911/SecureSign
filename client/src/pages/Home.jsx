@@ -222,7 +222,7 @@ export default function App() {
       formData2.append("File1", govid);
       formData2.append("label", email);
       await axios
-        .post("http://localhost:5000/post-face", formData2, {
+        .post("https://34.125.14.8/post-face", formData2, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -245,7 +245,7 @@ export default function App() {
       formData3.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
       let verified = false;
       await axios
-        .post("http://localhost:5000/check-face", formData3, {
+        .post("https://34.125.14.8/check-face", formData3, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
