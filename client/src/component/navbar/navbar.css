@@ -1,0 +1,89 @@
+.text {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 25px;
+  letter-spacing: 2px;
+  word-spacing: 2px;
+  color: #f3eeee;
+  font-weight: normal;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+}
+
+.navbar {
+  height: 80px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: space-between;
+
+  /* From https://css.glass */
+  background: rgba(145, 141, 141, 0.21);
+  border-radius: 50px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.5px);
+  -webkit-backdrop-filter: blur(9.5px);
+  border: 1px solid rgba(145, 141, 141, 0.3);
+}
+
+.logocontainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.logoname {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.login {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.navbar-right {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.usericoncontainer {
+  margin-top: 10px;
+  margin-bottom: auto;
+  margin-right: 2px;
+}
+
+.usertextconatiner {
+  position: absolute;
+  right: 14px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.21);
+  border-radius: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.5px);
+  -webkit-backdrop-filter: blur(9.5px);
+  border: 1px solid rgba(145, 141, 141, 0.3);
+}
+
+.spacedown {
+  text-align: left;
+  margin-bottom: 17px;
+  margin-right: 10px;
+  cursor: pointer;
+  padding: 5px;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  border-color: #acabab;
+  border-style: solid;
+  border-radius: 6px;
+}
+
+.text-box {
+  font-size: 18px;
+}
+
+.nodisplay {
+  display: none;
+}

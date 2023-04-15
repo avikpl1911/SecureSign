@@ -1,44 +1,36 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import "./login.css";
+import Navbar from "../../component/navbar/Navbar";
+import Identity from "../../svg_componets/Identity";
+import Inputholder from "../../style-component/input_holder/Inputholder";
+import Loader from "../../style-component/loaderimg/Loader";
+import Upload from "../../svg_componets/Upload";
 import Web3 from "web3";
-import { Web3Storage } from "web3.storage";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
-
+import Button from "@mui/material/Button";
 import {
   IDENTITY_CONTRACT_ADDRESS,
   IDENTITY_CONTRACT_ABI,
-} from "../contracts/constance";
-import CameraComponent from "../component/CameraComponent";
+} from "../../contracts/constance";
+import CameraComponent from "../../component/CameraComponent";
+import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
+import Typography from "@mui/material/Typography";
 import DialogActions from "@mui/material/DialogActions";
+import { CircularProgress } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import Navbar from "../component/navbar/Navbar";
-
-const theme = createTheme();
-const storage = new Web3Storage({
-  token:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDBiNzQ0Y2Q1OGFhMDA1MUQyMkNGNDgwZTJmN0ExZEI2MzEzNDUzODAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzcxMzYzMjc4MzUsIm5hbWUiOiJ0ZXN0aW5nIn0.rVioEmlj8oDKtEGg0DOJge58WuQgtH1xLk-PXEhVcOw",
-});
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+const handleClick = () => {
+  document.getElementById("takeID").click();
+};
 
-export default function App() {
+const Login = () => {
   const [identityContract, setIdentityContract] = React.useState(null);
   const [account, setAccount] = React.useState(null);
   const [web3, setWeb3] = React.useState(null);
@@ -62,6 +54,7 @@ export default function App() {
   const [result, setResult] = React.useState(false);
   const [isManualneeded, setIsManualneeded] = React.useState(false);
   const [govid, setGovid] = React.useState({});
+  const [isGovid, setIsGovid] = React.useState(false);
 
   const navigate = useNavigate();
   const loadWeb3 = async () => {
@@ -69,6 +62,7 @@ export default function App() {
       try {
         const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
         const accounts = await web3.eth.requestAccounts();
+        console.log(accounts);
         const account = accounts[0];
         const identityContract = new web3.eth.Contract(
           IDENTITY_CONTRACT_ABI,
@@ -76,6 +70,7 @@ export default function App() {
         );
         setIdentityContract(identityContract);
         // console.log(identityContract);
+        // console.log(account);
         setAccount(account);
         setWeb3(web3);
         const admin = await identityContract.methods
@@ -110,50 +105,6 @@ export default function App() {
     loadWeb3();
   }, []);
 
-  // const sendFileToIPFS = async (fileImg1, fileImg2) => {
-  //   setIpfsUploading(true);
-  //   if (fileImg1 && fileImg2) {
-  //     console.log("Sending File to IPFS");
-  //     setUploading(true);
-  //     try {
-  //       const formData = new FormData();
-  //       formData.append("file", fileImg1);
-
-  //       const resFile = await axios({
-  //         method: "post",
-  //         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-  //         data: formData,
-  //         headers: {
-  //           pinata_api_key: process.env.REACT_APP_PINATA_API,
-  //           pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //       console.log("File sent to IPFS: ", resFile.data.IpfsHash);
-  //       setCid(resFile.data.IpfsHash);
-
-  //       const formData1 = new FormData();
-  //       formData1.append("file", fileImg2);
-
-  //       const resFile1 = await axios({
-  //         method: "post",
-  //         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-  //         data: formData1,
-  //         headers: {
-  //           pinata_api_key: process.env.REACT_APP_PINATA_API,
-  //           pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //       console.log("File sent to IPFS: ", resFile1.data.IpfsHash);
-  //       setCurr(resFile1.data.IpfsHash);
-  //       setIpfsUploading(false);
-  //     } catch (error) {
-  //       console.log("Error sending File to IPFS: ");
-  //       console.log(error);
-  //     }
-  //   }
-  // };
   function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
@@ -252,7 +203,6 @@ export default function App() {
           },
         })
         .then(async (res) => {
-          console.log(res);
           if (res.data.message === "No face detected") {
             console.log("No face detected");
             verified = false;
@@ -265,7 +215,6 @@ export default function App() {
               verified = false;
             }
           }
-          console.log(name, email, phone, physicalAddress, cid, curr, verified);
           await identityContract.methods
             .createIdentity(
               name,
@@ -277,7 +226,7 @@ export default function App() {
               verified
             )
             .send({ from: account });
-          navigate("/user");
+          navigate("/profilenew");
         })
         .catch((err) => {
           console.log(err);
@@ -295,7 +244,8 @@ export default function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (name && email && phone && physicalAddress && govid !== {}) {
+    console.log(name, email, phone, physicalAddress, govid);
+    if (name && email && phone && physicalAddress && isGovid) {
       //   try {
       //     const res = await identityContract.methods
       //       .createIdentity(name, email, phone, physicalAddress, cid)
@@ -306,208 +256,186 @@ export default function App() {
       //   } catch (error) {
       //     console.log(error);
       //   }
+      //check if govid is uploade
       setContinueToRegister(true);
     } else {
       alert("Please fill all the fields");
     }
   };
-
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: "url(https://source.unsplash.com/featured/)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Typography
-            component="p"
-            variant="p"
-            sx={{
-              my: 4,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            Account : {account}
-          </Typography>
+    <div className="body">
+      <Navbar />
+      <div className="containern">
+        <div className="bodyLeft">
+          <div className="bodyLeftContainerr">
+            <div className="loaderContainer">
+              <Loader />
+            </div>
+            <div className="imgPrompt textsl1">
+              {!isGovid
+                ? "Upload your Government ID"
+                : "Government ID Uploaded"}
+            </div>
+          </div>
+        </div>
+        <div className="bodyRight">
+          <div className="logoContainer">
+            <div className="Accountcontainer textsl1">
+              Account :{" "}
+              <span>
+                {account ? account.slice(0, 20) + "..." : "Not Connected"}
+              </span>
+            </div>
+            {!continueToRegister && (
+              <>
+                <Identity />
+                <div className="textlogo textsl">Register Your Identity.</div>
+              </>
+            )}
+          </div>
           {continueToRegister ? (
-            <Box
-              sx={{
-                my: 8,
-                mx: 4,
+            <div
+              style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                justifyContent: "center",
                 alignItems: "center",
+                marginTop: "20px",
               }}
             >
-              <Typography component="h1" variant="h5">
-                Face Verification
-              </Typography>
               <CameraComponent setFileImgUrl={setFileImgUrl} />
               {fileImgUrl !== "" && (
-                <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "20px",
+                  }}
+                >
                   <img
                     src={fileImgUrl}
                     alt="img"
                     className="specialImage"
                     style={{
-                      width: "60%",
-                      marginTop: "57px",
-                      height: "auto",
+                      width: "340px",
+                      height: "257px",
+                      marginTop: "45px",
                     }}
                   />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
+                  <button
+                    className="text"
+                    style={{
+                      backgroundColor: "#1E1E1E",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      padding: "10px 20px",
+                      fontSize: "1.2rem",
+                      cursor: "pointer",
+                      marginTop: "20px",
+                      marginLeft: "50px",
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       setFileImgUrl("");
                     }}
                   >
                     Remove/Refresh
-                  </Button>
+                  </button>
 
                   {fileImgUrl && (
-                    <Button variant="outlined" onClick={handleClickOpen}>
+                    <button
+                      className="text"
+                      style={{
+                        backgroundColor: "#1E1E1E",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "10px 20px",
+                        fontSize: "1.2rem",
+                        cursor: "pointer",
+                        marginTop: "20px",
+                        marginLeft: "50px",
+                      }}
+                      onClick={handleClickOpen}
+                    >
                       Finish Registration
-                    </Button>
+                    </button>
                   )}
-                </>
+                </div>
               )}
-            </Box>
+            </div>
           ) : (
-            <Box
-              sx={{
-                my: 8,
-                mx: 4,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-
-              <Typography component="h1" variant="h5">
-                Register Your Identity
-              </Typography>
-              <Box
-                component="form"
-                noValidate
-                onSubmit={handleSubmit}
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  name="name"
-                  autoComplete="name"
-                  onChange={(e) => setName(e.target.value)}
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="phone"
-                  label="Phone"
-                  type="number"
-                  id="phone"
-                  onChange={(e) => setPhone(e.target.value)}
-                  autoComplete="current-phone"
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="physicalAddress"
-                  label="Physical Address"
-                  type="text"
-                  id="physicalAddress"
-                  onChange={(e) => setPhysicalAddress(e.target.value)}
-                  autoComplete="current-physicalAddress"
-                />
-                <Typography component="p" variant="p">
-                  Upload Most Recent Government ID *
-                </Typography>
-
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="govtId"
-                  type="file"
-                  id="govtId"
-                  autoComplete="govtId"
-                  onChange={(e) => {
-                    //the file should be an image it can be png or jpeg or jpg
-                    console.log(e.target.files[0].type);
-                    if (
-                      e.target.files[0].type === "image/png" ||
-                      e.target.files[0].type === "image/jpeg" ||
-                      e.target.files[0].type === "image/jpg"
-                    ) {
-                      const file = e.target.files[0];
-                      // setFileImg(file);
-                      // sendFileToIPFS(file);
-                      setGovid(file);
-                    } else {
-                      alert("Please upload an image file");
-                    }
-                  }}
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  loading={true}
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  disabled={uploading}
-                >
-                  {uploading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : (
-                    "Continue For Face Verification"
-                  )}
-                </Button>
-              </Box>
-            </Box>
+            <div className="formContainer">
+              <Inputholder
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Inputholder
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Inputholder
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <Inputholder
+                placeholder="Physical Address"
+                value={physicalAddress}
+                onChange={(e) => setPhysicalAddress(e.target.value)}
+              />
+              <div className="buttonscontainer">
+                <div className="uploadfile">
+                  <input
+                    type="file"
+                    id="takeID"
+                    className="fileInput"
+                    onChange={(e) => {
+                      //the file should be an image it can be png or jpeg or jpg
+                      console.log(e.target.files[0].type);
+                      if (
+                        e.target.files[0].type === "image/png" ||
+                        e.target.files[0].type === "image/jpeg" ||
+                        e.target.files[0].type === "image/jpg"
+                      ) {
+                        const file = e.target.files[0];
+                        // setFileImg(file);
+                        // sendFileToIPFS(file);
+                        setIsGovid(true);
+                        setGovid(file);
+                      } else {
+                        alert("Please upload an image file");
+                      }
+                    }}
+                  />
+                  <div className="uploadlogo" onClick={handleClick}>
+                    <Upload />
+                  </div>
+                  <div className="uploadtext textsl">
+                    {/* Upload Most Recent Goverment ID */}
+                    {isGovid ? govid.name : "Upload Most Recent Goverment ID"}
+                  </div>
+                </div>
+                <div className="submitbutton">
+                  <div className="mysubmitbutton" onClick={handleSubmit}>
+                    <span
+                      className="textsl submitbtntext"
+                      onClick={handleSubmit}
+                    >
+                      Continue
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
-        </Grid>
-      </Grid>
+        </div>
+      </div>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -539,6 +467,8 @@ export default function App() {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-    </ThemeProvider>
+    </div>
   );
-}
+};
+
+export default Login;

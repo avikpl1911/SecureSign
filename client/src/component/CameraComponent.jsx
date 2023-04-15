@@ -55,8 +55,6 @@ const CameraComponent = (props) => {
     setIntervalId(null);
   };
 
-  
-
   function captureImage() {
     const video = webcamRef.current.video;
     const canvas = document.createElement("canvas");
@@ -69,7 +67,15 @@ const CameraComponent = (props) => {
   }
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: "20px",
+      }}
+    >
       <div style={{ position: "relative", width: "340px", height: "280px" }}>
         <Webcam
           audio={false}
@@ -97,9 +103,19 @@ const CameraComponent = (props) => {
           height={280}
         ></canvas>
       </div>
-      <Button
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+      <button
+        className="text"
+        style={{
+          backgroundColor: "#1E1E1E",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          padding: "10px 20px",
+          fontSize: "1.2rem",
+          cursor: "pointer",
+          marginTop: "20px",
+          marginLeft: "50px",
+        }}
         onClick={(e) => {
           e.preventDefault();
           captureImage();
@@ -108,8 +124,8 @@ const CameraComponent = (props) => {
         // disabled={faceData && faceData.length > 0 ? false : true}
       >
         Capture
-      </Button>
-    </>
+      </button>
+    </div>
   );
 };
 

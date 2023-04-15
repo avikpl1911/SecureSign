@@ -7,6 +7,7 @@ import {
 } from "../contracts/constance";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Inputholder from "../style-component/input_holder/Inputholder";
 import {
   Box,
   Button,
@@ -20,8 +21,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
+import Upload from "../svg_componets/Upload";
+import Navbar from "../component/navbar/Navbar";
 
 const theme = createTheme();
+const handleClick = () => {
+  document.getElementById("takeID").click();
+};
 
 const AddDoc = () => {
   const [identityContract, setIdentityContract] = React.useState(null);
@@ -119,127 +125,102 @@ const AddDoc = () => {
     loadWeb3();
   }, []);
   return (
-    <>
+    <div
+      style={{
+        paddingTop: "10px",
+        backgroundColor: "black",
+        color: "white",
+        minHeight: "100vh",
+      }}
+    >
       {identity.verified ? (
         <ThemeProvider theme={theme}>
-          <Nav account={account} />
-          <Box sx={{ display: "flex" }}>
-            <Box
-              component="main"
-              sx={{
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "light"
-                    ? theme.palette.grey[100]
-                    : theme.palette.grey[900],
-                flexGrow: 1,
-                height: "100vh",
-                overflow: "auto",
+          {/* <Nav account={account} /> */}
+          <Navbar />
+          {/* <Box
+            sx={{ display: "flex" }}
+            style={{
+              paddingTop: "10px",
+              backgroundColor: "black",
+            }}
+          > */}
+
+          <div
+            className="formContainer"
+            style={{
+              marginTop: "40px",
+            }}
+          >
+            <h3
+              style={{
+                color: "white",
+                textAlign: "center",
+                marginBottom: "20px",
+                fontSize: "30px",
               }}
             >
-              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={8} lg={9}>
-                    <Paper
-                      sx={{ p: 2, display: "flex", flexDirection: "column" }}
-                    >
-                      <Typography
-                        component="h2"
-                        variant="h6"
-                        color="primary"
-                        gutterBottom
-                      >
-                        Add Document
-                      </Typography>
-                      <Box sx={{ pt: 4 }}>
-                        <form noValidate autoComplete="off">
-                          <Grid
-                            container
-                            spacing={3}
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Grid item xs={12} md={6}>
-                              <TextField
-                                required
-                                id="docName"
-                                name=" docName"
-                                label="Document Name"
-                                fullWidth
-                                autoComplete="docName"
-                                onChange={(e) => {
-                                  setDocName(e.target.value);
-                                }}
-                              />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="govtId"
-                                type="file"
-                                id="govtId"
-                                autoComplete="govtId"
-                                onChange={(e) => {
-                                  //it should be meore than 4 mb
-                                  if (e.target.files[0].size > 4000000) {
-                                    alert("File size should be less than 4mb");
-                                  } else {
-                                    setDoc(e.target.files[0]);
-                                  }
-                                }}
-                              />
-                            </Grid>
-                            {/* <Grid item xs={12}>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    color="secondary"
-                                    name="saveAddress"
-                                    value="yes"
-                                  />
-                                }
-                                label="I want to save my address for next time"
-                              />
-                            </Grid> */}
-                          </Grid>
-                          <Box sx={{ pt: 2 }}>
-                            <Button
-                              color="primary"
-                              variant="contained"
-                              onClick={async (e) => {
-                                e.preventDefault();
-                                handleUpload();
-                              }}
-                            >
-                              {docUploading ? (
-                                <CircularProgress color="secondary" size={20} />
-                              ) : (
-                                "Upload"
-                              )}
-                            </Button>
-                          </Box>
-                        </form>
-                      </Box>
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Container>
-            </Box>
-          </Box>
+              <b>Upload Document</b>
+            </h3>
+            <Inputholder
+              placeholder="Document/Certificate Name"
+              value={docName}
+              required
+              onChange={(e) => setDocName(e.target.value)}
+            />
+
+            <div
+              className="buttonscontainer"
+              style={{
+                marginTop: "40px",
+              }}
+            >
+              <div className="uploadfile">
+                <input
+                  type="file"
+                  id="takeID"
+                  className="fileInput"
+                  required
+                  onChange={(e) => {
+                    if (e.target.files[0].size > 4000000) {
+                      alert("File size should be less than 4mb");
+                    } else {
+                      setDoc(e.target.files[0]);
+                      console.log(e.target.files[0].name);
+                    }
+                  }}
+                />
+                <div className="uploadlogo" onClick={handleClick}>
+                  <Upload />
+                </div>
+                <div className="uploadtext textsl">
+                  {doc ? doc.name : "Upload Document/Certificate"}
+                </div>
+              </div>
+              <div className="submitbutton">
+                <div
+                  className="mysubmitbutton"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    handleUpload();
+                  }}
+                >
+                  <span className="textsl submitbtntext">
+                    {" "}
+                    {docUploading ? "Uploading" : "Upload"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* </Box> */}
         </ThemeProvider>
       ) : (
         <ThemeProvider theme={theme}>
-          <Nav account={account} />
+          {/* <Nav account={account} /> */}
+          <Navbar />
           <main
             sx={{
-              backgroundColor: (theme) =>
-                theme.palette.mode === "light"
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
+              backgroundColor: "black",
               flexGrow: 1,
               height: "100vh",
               overflow: "auto",
@@ -248,7 +229,7 @@ const AddDoc = () => {
             <Typography
               component="h2"
               variant="h6"
-              color="primary"
+              color="white"
               gutterBottom
               style={{ textAlign: "center", marginTop: "20px" }}
             >
@@ -257,7 +238,7 @@ const AddDoc = () => {
             <Typography
               component="h2"
               variant="h6"
-              color="primary"
+              color="white"
               gutterBottom
               style={{ textAlign: "center" }}
             >
@@ -266,7 +247,7 @@ const AddDoc = () => {
           </main>
         </ThemeProvider>
       )}
-    </>
+    </div>
   );
 };
 
