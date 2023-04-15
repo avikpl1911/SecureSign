@@ -1,5 +1,5 @@
 import IdentityManagement from "./IdentityManagement.json";
 
 export const IDENTITY_CONTRACT_ADDRESS =
-  IdentityManagement.networks[5777].address;
+  IdentityManagement.networks[11155111].address;
 export const IDENTITY_CONTRACT_ABI = IdentityManagement.abi;

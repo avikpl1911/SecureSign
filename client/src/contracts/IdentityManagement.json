@@ -38400,10 +38400,16 @@
       "links": {},
       "address": "0x3797c532D2AB72352B35147399deCb72A3d77E3d",
       "transactionHash": "0x08d3ae9e8aa2cf7148e7843c0e9112afa71f9df8790b66678ee47581ace20b4d"
+    },
+    "11155111": {
+      "events": {},
+      "links": {},
+      "address": "0x315d5799272cF5fd047982D7098270AAD40Fe05F",
+      "transactionHash": "0x07765f90d820b1b52cd3f45d4b5066ef5a9f831ea45150d8fb33343b5efba256"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-04-15T16:59:35.329Z",
+  "updatedAt": "2023-04-15T18:07:27.403Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
