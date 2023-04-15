@@ -17,14 +17,14 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/user" element={<User />} />
           <Route path="/add" element={<AddDoc />} />
           <Route path="/status" element={<DocStatus />} />
           <Route path="/admin" element={<AdminHome />} />
           <Route path="/vdocument" element={<VerifyDocumen />} />
           <Route path="/verify" element={<CheckAuth />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<Login />} />
           <Route path="/finddoc" element={<FindDocument />} />
           <Route path="/searchDoc" element={<SearchDoc />} />

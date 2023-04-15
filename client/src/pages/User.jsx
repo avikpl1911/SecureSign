@@ -44,6 +44,7 @@ const User = () => {
           .call();
         console.log(identity);
         //convertt arr to obj using destructuring
+        console.log(account, identity);
         identity = {
           name: identity["name"],
           email: identity["email"],

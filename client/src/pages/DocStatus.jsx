@@ -23,6 +23,7 @@ import {
 } from "../contracts/constance";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Nav from "../component/Nav";
+import Navbar from "../component/navbar/Navbar";
 
 const DocStatus = () => {
   const [identityContract, setIdentityContract] = React.useState(null);
@@ -47,7 +48,7 @@ const DocStatus = () => {
         let docList = await identityContract.methods
           .getDocuments(account)
           .call();
-        console.log(docList);
+
         setDocList(docList);
       } catch (error) {
         console.log(error);
@@ -61,68 +62,158 @@ const DocStatus = () => {
     loadWeb3();
   }, []);
   return (
-    <>
-      <Nav account={account} />
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        paddingTop: "10px",
+        backgroundColor: "black",
+        color: "white",
+        minHeight: "100vh",
+      }}
+    >
+      {/* <Nav account={account} /> */}
+      <Navbar />
+      <Grid
+        container
+        spacing={3}
+        style={{
+          paddingTop: "10px",
+          backgroundColor: "black",
+        }}
+      >
+        <Grid
+          item
+          xs={12}
+          style={{
+            backgroundColor: "black",
+            color: "white",
+          }}
+        >
+          <Paper
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "black",
+              color: "white",
+            }}
+          >
             <Typography variant="h6" gutterBottom component="div">
               All Documents
             </Typography>
             {docList.length > 0 ? (
-              <Table size="small">
+              <Table size="small" color="white" width="90%">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Certificate CID</TableCell>
-                    <TableCell>View Document</TableCell>
-                    <TableCell>Vierified</TableCell>
-                    <TableCell>Valid Until</TableCell>
-                    <TableCell>Verification Status</TableCell>
-                    <TableCell>Shareable Link</TableCell>
+                    <TableCell
+                      //change the font color
+                      style={{ color: "white" }}
+                    >
+                      Name
+                    </TableCell>
+                    <TableCell style={{ color: "white" }}>
+                      Certificate CID
+                    </TableCell>
+                    <TableCell style={{ color: "white" }}>
+                      View Document
+                    </TableCell>
+                    <TableCell style={{ color: "white" }}>Vierified</TableCell>
+                    <TableCell style={{ color: "white" }}>
+                      Valid Until
+                    </TableCell>
+                    <TableCell style={{ color: "white" }}>
+                      Verification Status
+                    </TableCell>
+                    <TableCell style={{ color: "white" }}>
+                      Shareable Link
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {docList.map((doc) => (
                     <TableRow key={doc["documentName"]}>
-                      <TableCell>{doc["documentName"]}</TableCell>
-                      <TableCell>{doc["documentCID"]}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          href={`https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`}
-                          target="_blank"
+                      <TableCell style={{ color: "white" }}>
+                        {doc["documentName"]}
+                      </TableCell>
+                      <TableCell style={{ color: "white" }}>
+                        {doc["documentCID"]}
+                      </TableCell>
+                      <TableCell style={{ color: "white" }}>
+                        <button
+                          className="text"
+                          style={{
+                            backgroundColor: "#1E1E1E",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            padding: "10px 20px",
+                            fontSize: "1.2rem",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                            marginBottom: "10px",
+                          }}
+                          // href={`https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`}
+                          // target="_blank"
+                          onClick={() => {
+                            window.open(
+                              `https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`
+                            );
+                          }}
                         >
                           View
-                        </Button>
+                        </button>
                       </TableCell>
 
-                      <TableCell>{doc["verified"] ? "Yes" : "No"}</TableCell>
-                      <TableCell>
+                      <TableCell style={{ color: "white" }}>
+                        {doc["verified"] ? "Yes" : "No"}
+                      </TableCell>
+                      <TableCell style={{ color: "white" }}>
                         {new Date(
                           doc["validityUpTo"] * 1000
                         ).toLocaleDateString()}
                       </TableCell>
-                      <TableCell>
+                      <TableCell style={{ color: "white" }}>
                         {doc["verified"] ? "Verified" : "Pending"}
                       </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          href={`https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`}
-                          target="_blank"
+                      <TableCell style={{ color: "white" }}>
+                        <button
+                          className="text"
+                          style={{
+                            backgroundColor: "#1E1E1E",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            padding: "10px 20px",
+                            fontSize: "1.2rem",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                            marginBottom: "10px",
+                          }}
+                          onClick={() => {
+                            window.open(
+                              `https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`
+                            );
+                          }}
+
+                          // href={`https://gateway.pinata.cloud/ipfs/${doc["documentCID"]}`}
+                          // target="_blank"
                         >
                           Share
-                        </Button>
+                        </button>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             ) : (
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography
+                variant="h6"
+                gutterBottom
+                component="div"
+                style={{
+                  backgroundColor: "black",
+                  color: "white",
+                }}
+              >
                 No Documents Found
               </Typography>
             )}
@@ -130,7 +221,7 @@ const DocStatus = () => {
         </Grid>
       </Grid>
       {/* </Container> */}
-    </>
+    </div>
   );
 };
 

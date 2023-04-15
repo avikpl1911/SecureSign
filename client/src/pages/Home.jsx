@@ -93,7 +93,7 @@ export default function App() {
             .call({ from: account });
           if (isRegistered) {
             setIsRegistered(true);
-            navigate("/user");
+            navigate("/profilenew");
           } else {
             setIsRegistered(false);
           }
@@ -166,8 +166,6 @@ export default function App() {
     }
 
     return new File([u8arr], filename, { type: mime });
-
-
   }
   const handleClickOpen = async () => {
     setOpen(true);
@@ -313,9 +311,7 @@ export default function App() {
   };
 
   return (
-    
     <ThemeProvider theme={theme}>
-      
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
