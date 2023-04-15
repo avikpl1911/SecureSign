@@ -26,6 +26,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import Navbar from "../component/navbar/Navbar";
 
 const theme = createTheme();
 const storage = new Web3Storage({
@@ -165,6 +166,8 @@ export default function App() {
     }
 
     return new File([u8arr], filename, { type: mime });
+
+
   }
   const handleClickOpen = async () => {
     setOpen(true);
@@ -310,7 +313,9 @@ export default function App() {
   };
 
   return (
+    
     <ThemeProvider theme={theme}>
+      
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
