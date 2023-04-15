@@ -251,6 +251,7 @@ export default function App() {
           },
         })
         .then(async (res) => {
+          console.log(res);
           if (res.data.message === "No face detected") {
             console.log("No face detected");
             verified = false;
@@ -263,6 +264,7 @@ export default function App() {
               verified = false;
             }
           }
+          console.log(name, email, phone, physicalAddress, cid, curr, verified);
           await identityContract.methods
             .createIdentity(
               name,
@@ -319,7 +321,7 @@ export default function App() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://source.unsplash.com/random)",
+            backgroundImage: "url(https://source.unsplash.com/featured/)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
