@@ -223,7 +223,7 @@ export default function App() {
       formData2.append("File1", govid);
       formData2.append("label", email);
       await axios
-        .post("http://localhost:5000/post-face", formData2, {
+        .post("https://34.125.14.8/post-face", formData2, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -246,12 +246,13 @@ export default function App() {
       formData3.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
       let verified = false;
       await axios
-        .post("http://localhost:5000/check-face", formData3, {
+        .post("https://34.125.14.8/check-face", formData3, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then(async (res) => {
+          console.log(res);
           if (res.data.message === "No face detected") {
             console.log("No face detected");
             verified = false;
@@ -264,6 +265,7 @@ export default function App() {
               verified = false;
             }
           }
+          console.log(name, email, phone, physicalAddress, cid, curr, verified);
           await identityContract.methods
             .createIdentity(
               name,
@@ -320,7 +322,7 @@ export default function App() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://source.unsplash.com/random)",
+            backgroundImage: "url(https://source.unsplash.com/featured/)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
