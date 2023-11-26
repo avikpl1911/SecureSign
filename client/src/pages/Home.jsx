@@ -189,9 +189,8 @@ export default function App() {
         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
         data: formData,
         headers: {
-          pinata_api_key: process.env.REACT_APP_PINATA_API,
-          pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${process.env.REACT_APP_JWT}`,
+          "Content-Type": `multipart/form-data;  boundary=${formData._boundary}`,
         },
       });
       console.log("File sent to IPFS: ", resFile.data.IpfsHash);
@@ -205,9 +204,8 @@ export default function App() {
         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
         data: formData1,
         headers: {
-          pinata_api_key: process.env.REACT_APP_PINATA_API,
-          pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${process.env.REACT_APP_JWT}`,
+          "Content-Type": `multipart/form-data;  boundary=${formData._boundary}`,
         },
       });
       console.log("File sent to IPFS: ", resFile1.data.IpfsHash);
@@ -223,7 +221,7 @@ export default function App() {
       formData2.append("File1", govid);
       formData2.append("label", email);
       await axios
-        .post("https://34.125.14.8/post-face", formData2, {
+        .post("http://localhost:5000/post-face", formData2, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -246,7 +244,7 @@ export default function App() {
       formData3.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
       let verified = false;
       await axios
-        .post("https://34.125.14.8/check-face", formData3, {
+        .post("http://localhost:5000/check-face", formData3, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -22,6 +22,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { convertLength } from "@mui/material/styles/cssUtils";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -69,8 +70,9 @@ const Login = () => {
           IDENTITY_CONTRACT_ADDRESS
         );
         setIdentityContract(identityContract);
-        // console.log(identityContract);
-        // console.log(account);
+        
+        console.log(identityContract);
+        console.log(account);
         setAccount(account);
         setWeb3(web3);
         const admin = await identityContract.methods
@@ -134,15 +136,15 @@ const Login = () => {
       setIpfsUploading(true);
       const formData = new FormData();
       formData.append("file", govid);
-
+      console.log(process.env.REACT_APP_JWT)
       const resFile = await axios({
         method: "post",
         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
         data: formData,
         headers: {
-          pinata_api_key: process.env.REACT_APP_PINATA_API,
-          pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-          "Content-Type": "multipart/form-data",
+          
+          'Authorization': `Bearer ${process.env.REACT_APP_JWT}`,
+          "Content-Type": `multipart/form-data;  boundary=${formData._boundary}`,
         },
       });
       console.log("File sent to IPFS: ", resFile.data.IpfsHash);
@@ -156,9 +158,8 @@ const Login = () => {
         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
         data: formData1,
         headers: {
-          pinata_api_key: process.env.REACT_APP_PINATA_API,
-          pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${process.env.REACT_APP_JWT}`,
+          "Content-Type": `multipart/form-data;  boundary=${formData._boundary}`,
         },
       });
       console.log("File sent to IPFS: ", resFile1.data.IpfsHash);
@@ -174,7 +175,7 @@ const Login = () => {
       formData2.append("File1", govid);
       formData2.append("label", email);
       await axios
-        .post("https://34.125.14.8/post-face", formData2, {
+        .post("http://localhost:5000/post-face", formData2, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -197,7 +198,7 @@ const Login = () => {
       formData3.append("File1", dataURLtoFile(fileImgUrl, "image.png"));
       let verified = false;
       await axios
-        .post("https://34.125.14.8/check-face", formData3, {
+        .post("http://localhost:5000/check-face", formData3, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

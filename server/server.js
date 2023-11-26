@@ -135,22 +135,22 @@ app.get("/", (req, res) => {
   res.status(200).json({ status: "online" });
 });
 
-app.post("/send", (req, res) => {
-  const { number, message } = req.body;
-  client.messages
-    .create({
-      body: message,
-      from: "+12762778269",
-      to: number,
-    })
-    .then((message) => {
-      res.status(200).json({ message: "Message sent successfully" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: "Message not sent" });
-    });
-});
+// app.post("/send", (req, res) => {
+//   const { number, message } = req.body;
+//   client.messages
+//     .create({
+//       body: message,
+//       from: "+12762778269",
+//       to: number,
+//     })
+//     .then((message) => {
+//       res.status(200).json({ message: "Message sent successfully" });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({ message: "Message not sent" });
+//     });
+// });
 
 app.post("/post-face", async (req, res) => {
   const File1 = req.files.File1.tempFilePath;
@@ -208,7 +208,7 @@ app.listen(5000, () => {
   console.log("Server started on port 5000");
   mongoose
     .connect(
-      "mongodb+srv://admin:Dws5eFgTaYXq47HD@mern.ztyvxss.mongodb.net/?retryWrites=true&w=majority",
+      "mongodb+srv://imgod:1234@cluster0.khaelkt.mongodb.net/?retryWrites=true&w=majority",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

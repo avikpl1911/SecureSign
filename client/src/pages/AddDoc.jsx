@@ -99,7 +99,8 @@ const AddDoc = () => {
           headers: {
             pinata_api_key: process.env.REACT_APP_PINATA_API,
             pinata_secret_api_key: process.env.REACT_APP_PINATA_SECRET,
-            "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${process.env.REACT_APP_JWT}`,
+            "Content-Type": `multipart/form-data;  boundary=${formData._boundary}`,
           },
         });
 
